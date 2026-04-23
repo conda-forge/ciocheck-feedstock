@@ -1,6 +1,5 @@
 {% set name = "ciocheck" %}
 {% set version = "0.1.1" %}
-{% set hash_type = "sha256" %}
 {% set hash = "03d02a7c5348e2d040e8e229254d447ef51f2076cfb8153d4b25f32ea3915488" %}
 
 package:
@@ -9,19 +8,19 @@ package:
 
 source:
   url: https://github.com/ContinuumIO/{{ name }}/archive/v{{ version }}.tar.gz
-  {{ hash_type }}: {{ hash }}
+  sha256: {{ hash }}
 
 build:
   noarch: python
-  script: python -m pip install --no-deps --ignore-installed .
-  number: 2
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  number: 3
   entry_points:
     - ciocheck = ciocheck.main:main
 
 requirements:
   host:
     - pip
-    - python
+    - python {{ python_min }}
     - setuptools
   run:
     - autopep8
@@ -34,11 +33,13 @@ requirements:
     - pytest-cov
     - pytest-json
     - pytest-xdist
-    - python
+    - python >={{ python_min }}
     - six
     - yapf
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - ciocheck
 
